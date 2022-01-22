@@ -2,25 +2,24 @@
 version: "2.2"
 services:
   # https://github.com/haugene/docker-transmission-openvpn
-  '''
-  transmission:
-    # NOTE: change tag to dev-arm64 instead of dev when using Raspberry Pi
-    image: haugene/transmission-openvpn:dev
-    container_name: transmission-openvpn
-    restart: always
-    ports:
-      - "9091:9091"
-    environment:
-      - CREATE_TUN_DEVICE=true
-      - OPENVPN_PROVIDER=<FILL>
-      - OPENVPN_CONFIG=<FILL>
-      - OPENVPN_USERNAME=<FILL>
-      - OPENVPN_PASSWORD=<FILL>
-      - WEBPROXY_ENABLED=false
-    volumes:
-      - /media/downloads:/data
-      - /etc/localtime:/etc/localtime:ro
-'''
+
+  #transmission:
+  #  # NOTE: change tag to dev-arm64 instead of dev when using Raspberry Pi
+  #  image: haugene/transmission-openvpn:dev
+  #  container_name: transmission-openvpn
+  #  restart: always
+  #  ports:
+  #    - "9091:9091"
+  #  environment:
+  #    - CREATE_TUN_DEVICE=true
+  #    - OPENVPN_PROVIDER=<FILL>
+  #    - OPENVPN_CONFIG=<FILL>
+  #    - OPENVPN_USERNAME=<FILL>
+  #    - OPENVPN_PASSWORD=<FILL>
+  #    - WEBPROXY_ENABLED=false
+  #  volumes:
+  #    - /media/downloads:/data
+  #    - /etc/localtime:/etc/localtime:ro
   # https://github.com/linuxserver/docker-radarr
   radarr:
     image: linuxserver/radarr:3.2.2.5080-ls128
