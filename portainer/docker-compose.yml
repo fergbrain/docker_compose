@@ -2,11 +2,17 @@ version: "3.3"
 
 services:
   portainer:
+    container_name: portainer
     image: portainer/portainer-ce:2.6.3
-    restart: always
+    restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+   ports:
+         - 9000:9000
+   security_opt:
+         - no-new-privileges:true
 
 volumes:
   portainer_data:
