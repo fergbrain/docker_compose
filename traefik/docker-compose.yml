@@ -1,0 +1,115 @@
+version: '3.3'
+
+services:
+  traefik:
+    # The official v2.0 Traefik docker image
+    image: traefik:v2.3
+    container_name: traefik
+    environment:
+       - NAMECHEAP_API_USER=andrewferguson
+       - NAMECHEAP_API_KEY=215329484f484573ab4481e5fe945a5a
+
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      - "--api=true"
+      - "--api.dashboard=true"
+#      - "--log.level=DEBUG"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.https.address=:443"
+      - "--entrypoints.snmptrap.address=:162/udp"
+      - "--entrypoints.syslog.address=:514/udp"
+      - "--entryPoints.https.forwardedHeaders.trustedIPs=192.168.124.0/24"
+
+# Needed for Unifi controller
+      - "--serversTransport.insecureSkipVerify=true"
+
+      ## Let's Encrypt General Config
+      - "--certificatesResolvers.letsencrypt.acme.email=andrew@fergcorp.com"
+      - "--certificatesResolvers.letsencrypt-http.acme.email=andrew@fergcorp.com"
+      - "--certificatesResolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json"
+      - "--certificatesResolvers.letsencrypt-http.acme.storage=/etc/traefik/acme/acme.json"
+       # used during the challenge
+      - "--certificatesResolvers.letsencrypt-http.acme.httpChallenge=true"
+      - "--certificatesResolvers.letsencrypt-http.acme.httpChallenge.entryPoint=http"
+      ## LE DNS Challenge Config
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge=true"
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=namecheap"
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.delayBeforeCheck=0"
+
+#only needed for staging
+#      - "--certificatesResolvers.letsencrypt-http.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+
+
+    labels:
+      ## HTTP to HTTPS Redirect
+      - "traefik.http.routers.http-catchAll.entryPoints=http"
+      - "traefik.http.routers.http-catchAll.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchAll.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
+
+      - "traefik.http.middlewares.ferg-ipwhitelist.ipwhitelist.sourcerange=192.168.124.0/24"
+
+
+      ####
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entryPoints=https"
+      - "traefik.http.routers.api.rule=Host(`traefik.ferg.ferguson.pw`)"
+      
+
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.tls.domains[0].main=ferg.ferguson.pw"
+      - "traefik.http.routers.traefik.tls.domains[0].sans=*.ferg.ferguson.pw"      
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=andrewferguson:$$apr1$$8W4yNxee$$CdaYJ5W2ZPn3sOv1xtcUY."
+    
+    ports:
+      # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
+      - target: 80
+        published: 80
+        mode: host
+      # Listen on port 443, default for HTTPS
+      - target: 443
+        published: 443
+        mode: host
+      # Listen on port 162, default for SNMP
+      - target: 162
+        published: 162
+        protocol: udp
+        mode: host
+      - target: 514
+        published: 514
+        protocol: udp
+        mode: host
+
+
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./config:/config:ro"
+      - "./certs:/etc/traefik/certs"
+      - /etc/traefik/acme/:/etc/traefik/acme/
+    networks:
+      - traefik
+    restart: unless-stopped
+
+
+  whoami:
+    image: "containous/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.ferg.ferguson.pw`)"
+      - "traefik.http.routers.whoami.entrypoints=http"
+      - "traefik.http.routers.whoami.middlewares=ferg-ipwhitelist@docker"
+    networks:
+      - traefik
+
+
+networks:
+  traefik:
+    external: true
