@@ -10,7 +10,7 @@ services:
       - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
-      -  media/overseer:/config
+      -  overseer:/config
     ports:
       - 5055:5055
     restart: unless-stopped
