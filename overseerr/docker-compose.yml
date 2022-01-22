@@ -10,7 +10,7 @@ services:
       - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
-      -  /media/overseer:/config
+      -  media/overseer:/config
     ports:
       - 5055:5055
     restart: unless-stopped
@@ -45,9 +45,9 @@ services:
       - PUID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - /media/radarr:/config
-      - /media/movies:/movies
-      - /media/downloads/completed:/downloads
+      - media/radarr:/config
+      - media/movies:/movies
+      - media/downloads/completed:/downloads
 
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
@@ -61,9 +61,9 @@ services:
       - PUID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - /media/sonarr:/config
-      - /media/tv:/tv
-      - /media/downloads/completed:/downloads
+      - media/sonarr:/config
+      - media/tv:/tv
+      - media/downloads/completed:/downloads
 
   # https://github.com/linuxserver/docker-jackett
   jackett:
@@ -77,5 +77,5 @@ services:
       - PUID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - /media/jackett:/config
-      - /media/downloads/watch:/downloads  # transmission watch directory
+      - media/jackett:/config
+      - media/downloads/watch:/downloads  # transmission watch directory
