@@ -87,7 +87,7 @@ volumes:
   tv:
     external: true
     name: tv
-  download_completed:
+  downloads_completed:
     external: true
     name: downloads_completed
   downloads_watch:
