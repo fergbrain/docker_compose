@@ -79,3 +79,8 @@ services:
     volumes:
       - media/jackett:/config
       - media/downloads/watch:/downloads  # transmission watch directory
+
+volumes:
+  media:
+    external: true
+    name: media
