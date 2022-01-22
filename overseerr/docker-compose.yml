@@ -10,7 +10,7 @@ services:
       - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
-      -  overseer:/config
+      -  overseerr:/config
     ports:
       - 5055:5055
     restart: unless-stopped
@@ -93,9 +93,9 @@ volumes:
   downloads_watch:
     external: true
     name: downloads_watch
-  overseer:
+  overseerr:
     external: true
-    name: overseer
+    name: overseerr
   radarr:
     external: true
     name: radarr
