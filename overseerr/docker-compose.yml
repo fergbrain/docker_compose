@@ -45,9 +45,9 @@ services:
       - PUID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - media/radarr:/config
-      - media/movies:/movies
-      - media/downloads/completed:/downloads
+      - radarr:/config
+      - movies:/movies
+      - downloads_completed:/downloads
 
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
@@ -61,9 +61,9 @@ services:
       - PUID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - media/sonarr:/config
-      - media/tv:/tv
-      - media/downloads/completed:/downloads
+      - sonarr:/config
+      - tv:/tv
+      - downloads_completed:/downloads
 
   # https://github.com/linuxserver/docker-jackett
   jackett:
@@ -77,10 +77,31 @@ services:
       - PUID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - media/jackett:/config
-      - media/downloads/watch:/downloads  # transmission watch directory
+      - jackett:/config
+      - downloads_watch:/downloads  # transmission watch directory
 
 volumes:
-  media:
+  movies:
     external: true
-    name: media
+    name: movies
+  tv:
+    external: true
+    name: tv
+  download_completed:
+    external: true
+    name: download_completed
+  downloads_watch:
+    external: true
+    name: downloads_watch
+  overseer:
+    external: true
+    name: overseer
+  radarr:
+    external: true
+    name: radarr
+  sonarr:
+    external: true
+    name: sonarr
+  jackett:
+    external: true
+    name: jackett
