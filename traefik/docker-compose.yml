@@ -6,9 +6,11 @@ services:
     image: traefik:v2.3
     container_name: traefik
     environment:
-       - NAMECHEAP_API_USER=andrewferguson
-       - NAMECHEAP_API_KEY=215329484f484573ab4481e5fe945a5a
-
+      - HTTPREQ_ENDPOINT = "opnsense.ferg.ferguson.pw"
+	  - HTTPREQ_USERNAME = ""
+	  - HTTPREQ_PASSWORD = ""
+	  - HTTPREQ_POLLING_INTERVAL = "15"
+	  - HTTPREQ_PROPAGATION_TIMEOUT = 60
     # Enables the web UI and tells Traefik to listen to docker
     command:
       - "--api=true"

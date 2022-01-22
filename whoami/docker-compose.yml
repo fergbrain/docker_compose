@@ -1,0 +1,12 @@
+whoami:
+    image: jwilder/whoami
+    networks:
+      - caddy
+    deploy:
+      labels:
+        caddy: whoami.ferg.ferguson.pw
+        caddy.reverse_proxy: "{{upstreams 8000}}"
+        # remove the following line when you have verified your setup
+        # Otherwise you risk being rate limited by let's encrypt
+		#caddy.tls.dns: 
+        #caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
