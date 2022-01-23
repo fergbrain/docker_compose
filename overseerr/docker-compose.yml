@@ -82,49 +82,41 @@ services:
 
 volumes:
   movies:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/movies"
   tv:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/tv"
   downloads_completed:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/downloads/completed"
   downloads_watch:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/downloads/watch"
   overseerr:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/overseerr"
   radarr:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/radarr"
   sonarr:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
       device: ":/srv/media/sonarr"
   jackett:
-    external: true
     driver_opts:
       type: "nfs"
       o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
