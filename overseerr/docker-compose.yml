@@ -43,7 +43,7 @@ services:
     environment:
       - PGID=1000
       - PUID=1000
-      - TZ=Europe/Amsterdam
+      - TZ=America/Los_Angeles
     volumes:
       - radarr:/config
       - movies:/movies
@@ -59,7 +59,7 @@ services:
     environment:
       - PGID=1000
       - PUID=1000
-      - TZ=Europe/Amsterdam
+      - TZ=America/Los_Angeles
     volumes:
       - sonarr:/config
       - tv:/tv
@@ -75,7 +75,7 @@ services:
     environment:
       - PGID=1000
       - PUID=1000
-      - TZ=Europe/Amsterdam
+      - TZ=America/Los_Angeles
     volumes:
       - jackett:/config
       - downloads_watch:/downloads  # transmission watch directory
@@ -83,25 +83,49 @@ services:
 volumes:
   movies:
     external: true
-    name: movies
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/movies"
   tv:
     external: true
-    name: tv
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/tv"
   downloads_completed:
     external: true
-    name: downloads_completed
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/downloads/completed"
   downloads_watch:
     external: true
-    name: downloads_watch
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/downloads/watch"
   overseerr:
     external: true
-    name: overseerr
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/overseerr"
   radarr:
     external: true
-    name: radarr
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/radarr"
   sonarr:
     external: true
-    name: sonarr
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/sonarr"
   jackett:
     external: true
-    name: jackett
+    driver_opts:
+      type: "nfs"
+      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
+      device: ":/srv/media/jackett"
