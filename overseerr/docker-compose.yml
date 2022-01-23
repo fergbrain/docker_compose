@@ -5,8 +5,8 @@ services:
     image: lscr.io/linuxserver/overseerr
     container_name: overseerr
     environment:
-      - PGID=113
-      - PUID=106
+      - PGID=1000
+      - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
       -  overseerr:/config
@@ -40,8 +40,8 @@ services:
     ports:
       - "7878:7878"
     environment:
-      - PGID=113
-      - PUID=106
+      - PGID=1000
+      - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
       - radarr:/config
@@ -56,8 +56,8 @@ services:
     ports:
       - "8989:8989"
     environment:
-      - PGID=113
-      - PUID=106
+      - PGID=1000
+      - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
       - sonarr:/config
@@ -72,8 +72,8 @@ services:
     ports:
       - "9117:9117"
     environment:
-      - PGID=113
-      - PUID=106
+      - PGID=1000
+      - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
       - jackett:/config
