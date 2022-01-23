@@ -9,7 +9,7 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      -  overseerr:/config
+      -  /mnt/media/overseerr:/config
     ports:
       - 5055:5055
     restart: unless-stopped
@@ -44,9 +44,9 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - radarr:/config
-      - movies:/movies
-      - downloads_completed:/downloads
+      - /mnt/media/radarr:/config
+      - /mnt/media/movies:/movies
+      - /mnt/media/downloads/completed:/downloads
 
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
@@ -60,9 +60,9 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - sonarr:/config
-      - tv:/tv
-      - downloads_completed:/downloads
+      - /mnt/media/sonarr:/config
+      - /mnt/media/tv:/tv
+      - /mnt/media/downloads/completed:/downloads
 
   # https://github.com/linuxserver/docker-jackett
   jackett:
@@ -76,55 +76,5 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - jackett:/config
-      - downloads_watch:/downloads  # transmission watch directory
-
-volumes:
-  movies:
-    name: movies
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/movies"
-  tv:
-    name: tv
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/tv"
-  downloads_completed:
-    name: downloads_completed
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/downloads/completed"
-  downloads_watch:
-    name: downloads_watch
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/downloads/watch"
-  overseerr:
-    name: overseerr
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/overseerr"
-  radarr:
-    name: radarr
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/radarr"
-  sonarr:
-    name: sonarr
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/sonarr"
-  jackett:
-    name: jackett
-    driver_opts:
-      type: "nfs"
-      o: "addr=jupiter.ferg.ferguson.pw,nolock,soft,rw"
-      device: ":/srv/media/jackett"
+      - /mnt/media/jackett:/config
+      - /mnt/media/downloads/watch:/downloads  # transmission watch directory
