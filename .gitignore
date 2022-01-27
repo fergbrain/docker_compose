@@ -2,3 +2,4 @@ overseerr/config/transmission/openvpn-credentials.txt
 overseerr/data_overseerr/
 overseerr/data_radarr/
 overseerr/data_sonarr/
+overseerr/data/
