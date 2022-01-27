@@ -9,29 +9,39 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      -  /mnt/media/overseerr:/config
+      -  ./data_overseerr:/config
     ports:
       - 5055:5055
     restart: unless-stopped
-  # https://github.com/haugene/docker-transmission-openvpn
 
-  #transmission:
-  #  # NOTE: change tag to dev-arm64 instead of dev when using Raspberry Pi
-  #  image: haugene/transmission-openvpn:dev
-  #  container_name: transmission-openvpn
-  #  restart: always
-  #  ports:
-  #    - "9091:9091"
-  #  environment:
-  #    - CREATE_TUN_DEVICE=true
-  #    - OPENVPN_PROVIDER=<FILL>
-  #    - OPENVPN_CONFIG=<FILL>
-  #    - OPENVPN_USERNAME=<FILL>
-  #    - OPENVPN_PASSWORD=<FILL>
-  #    - WEBPROXY_ENABLED=false
-  #  volumes:
-  #    - /media/downloads:/data
-  #    - /etc/localtime:/etc/localtime:ro
+  # https://github.com/haugene/docker-transmission-openvpn
+  transmission:
+    image: haugene/transmission-openvpn:latest
+    container_name: transmission-openvpn
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "9091:9091"
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=America/Los_Angeles
+      - CREATE_TUN_DEVICE=true
+      - OPENVPN_PROVIDER=PIA
+      - OPENVPN_CONFIG=us_seattle,us_west,ca_vancouver
+      - OPENVPN_USERNAME=**None**
+      - OPENVPN_PASSWORD=**None**
+      - WEBPROXY_ENABLED=false
+      - TRANSMISSION_HOME=/etc/transmission/
+      - TRANSMISSION_ENABLE_DHT=false
+      - TRANSMISSION_SEED_RATIO=2
+      - LOCAL_NETWORK=10.0.0.0/8
+    volumes:
+      - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
+      - /mnt/media/downloads:/data
+      - /etc/localtime:/etc/localtime:ro
+  
   # https://github.com/linuxserver/docker-radarr
   radarr:
     image: linuxserver/radarr:3.2.2.5080-ls128
@@ -44,7 +54,7 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - /mnt/media/radarr:/config
+      - ./data_radarr:/config
       - /mnt/media/movies:/movies
       - /mnt/media/downloads/completed:/downloads
 
@@ -60,7 +70,7 @@ services:
       - PUID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - /mnt/media/sonarr:/config
+      - ./data_sonarr:/config
       - /mnt/media/tv:/tv
       - /mnt/media/downloads/completed:/downloads
 
