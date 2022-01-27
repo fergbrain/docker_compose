@@ -88,4 +88,3 @@ services:
     volumes:
       - ./data/jackett:/config
       - /mnt/media/downloads/watch:/downloads  # transmission watch directory
-      - /mnt/media/downloads/watch:/downloads  # transmission watch directory
