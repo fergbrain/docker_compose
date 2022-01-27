@@ -34,13 +34,11 @@ services:
       - OPENVPN_PASSWORD=**None**
       - WEBPROXY_ENABLED=false
       - TRANSMISSION_HOME=/etc/transmission/
-      - TRANSMISSION_ENABLE_DHT=false
-      - TRANSMISSION_SEED_RATIO=2
       - LOCAL_NETWORK=10.0.0.0/8
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ./data/transmission:/etc/transmission/
-	  - /mnt/media/downloads:/data
+      - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
   
   # https://github.com/linuxserver/docker-radarr
