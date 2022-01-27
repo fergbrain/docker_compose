@@ -39,7 +39,8 @@ services:
       - LOCAL_NETWORK=10.0.0.0/8
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
-      - /mnt/media/downloads:/data
+      - ./data/transmission:/etc/transmission/
+	  - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
   
   # https://github.com/linuxserver/docker-radarr
