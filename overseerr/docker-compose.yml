@@ -33,11 +33,11 @@ services:
       - OPENVPN_USERNAME=**None**
       - OPENVPN_PASSWORD=**None**
       - WEBPROXY_ENABLED=false
-      - TRANSMISSION_HOME=/etc/transmission/
+      - TRANSMISSION_HOME=/var/transmission-home/
       - LOCAL_NETWORK=10.0.0.0/8
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
-      - ./data/transmission:/etc/transmission/
+      - ./data/transmission:/var/transmission-home
       - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
   
