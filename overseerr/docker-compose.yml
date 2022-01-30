@@ -29,12 +29,15 @@ services:
       - TZ=America/Los_Angeles
       - CREATE_TUN_DEVICE=true
       - OPENVPN_PROVIDER=PIA
-      - OPENVPN_CONFIG=us_seattle,us_west,ca_vancouver
+      - OPENVPN_CONFIG=ca_vancouver,japan,ca_toronto,ca_ontario,mexico
       - OPENVPN_USERNAME=**None**
       - OPENVPN_PASSWORD=**None**
       - WEBPROXY_ENABLED=false
       - TRANSMISSION_HOME=/var/transmission-home/
       - LOCAL_NETWORK=10.0.0.0/8
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ./data/transmission:/var/transmission-home
