@@ -46,7 +46,7 @@ services:
   
   # https://github.com/linuxserver/docker-radarr
   radarr:
-    image: linuxserver/radarr:3.2.2.5080-ls128
+    image: linuxserver/radarr:latest
     container_name: radarr
     restart: always
     ports:
@@ -62,7 +62,7 @@ services:
 
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
-    image: linuxserver/sonarr:3.0.6.1342-ls132
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     restart: always
     ports:
@@ -78,7 +78,7 @@ services:
 
   # https://github.com/linuxserver/docker-jackett
   jackett:
-    image: linuxserver/jackett:v0.20.422-ls55
+    image: linuxserver/jackett:latest
     container_name: jackett
     restart: always
     ports:
