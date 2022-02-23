@@ -1,0 +1,23 @@
+http:
+  routers:
+    minio-route:
+      rule: "Host(`backup.fergcorp.com`)"
+      entrypoints: https
+      tls:
+        certresolver: letsencrypt-http
+      service: minio-server
+    minio-console-route:
+      rule: "Host(`backup.fergcorp.com`) && Path(`/console`)"
+      entrypoints: https
+      tls:
+        certresolver: letsencrypt-http
+      service: minio-console
+  services:
+    minio-server:
+      loadBalancer:
+        servers:
+          - url: "https://minio.ferg.ferguson.pw:9000"
+    minio-console:
+      loadBalancer:
+        servers:
+          - url: "https://minio.ferg.ferguson.pw:9001"

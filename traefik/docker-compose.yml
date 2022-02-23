@@ -3,14 +3,11 @@ version: '3.3'
 services:
   traefik:
     # The official v2.0 Traefik docker image
-    image: traefik:v2.3
+    image: traefik:v2.6.1
     container_name: traefik
     environment:
-      - HTTPREQ_ENDPOINT = "opnsense.ferg.ferguson.pw"
-	  - HTTPREQ_USERNAME = ""
-	  - HTTPREQ_PASSWORD = ""
-	  - HTTPREQ_POLLING_INTERVAL = "15"
-	  - HTTPREQ_PROPAGATION_TIMEOUT = 60
+      - LUADNS_API_USERNAME=${LUADNS_API_USERNAME}
+      - LUADNS_API_TOKEN=${LUADNS_API_TOKEN}
     # Enables the web UI and tells Traefik to listen to docker
     command:
       - "--api=true"
@@ -19,11 +16,14 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik"
+      - "--providers.file=true"
+      - "--providers.file.directory=/etc/traefik/"
+      - "--providers.file.watch=true"
       - "--entrypoints.http.address=:80"
       - "--entrypoints.https.address=:443"
       - "--entrypoints.snmptrap.address=:162/udp"
       - "--entrypoints.syslog.address=:514/udp"
-      - "--entryPoints.https.forwardedHeaders.trustedIPs=192.168.124.0/24"
+      - "--entryPoints.https.forwardedHeaders.trustedIPs=10.10.0.0/24"
 
 # Needed for Unifi controller
       - "--serversTransport.insecureSkipVerify=true"
@@ -38,12 +38,14 @@ services:
       - "--certificatesResolvers.letsencrypt-http.acme.httpChallenge.entryPoint=http"
       ## LE DNS Challenge Config
       - "--certificatesResolvers.letsencrypt.acme.dnsChallenge=true"
-      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=namecheap"
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.provider=luadns"
       - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.delayBeforeCheck=0"
 
-#only needed for staging
-#      - "--certificatesResolvers.letsencrypt-http.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=ns1.luadns.net:53"
 
+#only needed for staging
+#      - "--certificatesResolvers.letsencrypt.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+#      - "--certificatesResolvers.letsencrypt-http.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
 
     labels:
       ## HTTP to HTTPS Redirect
@@ -52,7 +54,7 @@ services:
       - "traefik.http.routers.http-catchAll.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
 
-      - "traefik.http.middlewares.ferg-ipwhitelist.ipwhitelist.sourcerange=192.168.124.0/24"
+      - "traefik.http.middlewares.ferg-ipwhitelist.ipwhitelist.sourcerange=10.10.0.0/24,192.168.124.0/24"
 
 
       ####
@@ -92,9 +94,11 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      - "./config:/config:ro"
-      - "./certs:/etc/traefik/certs"
-      - /etc/traefik/acme/:/etc/traefik/acme/
+      - ./config:/config:ro
+      - ./certs:/etc/traefik/certs
+      - ./config/acme/:/etc/traefik/acme/
+      - ./config/rules/:/etc/traefik/rules/
+
     networks:
       - traefik
     restart: unless-stopped
@@ -106,8 +110,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.ferg.ferguson.pw`)"
-      - "traefik.http.routers.whoami.entrypoints=http"
+      - "traefik.http.routers.whoami.entrypoints=https"
       - "traefik.http.routers.whoami.middlewares=ferg-ipwhitelist@docker"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     networks:
       - traefik
 
