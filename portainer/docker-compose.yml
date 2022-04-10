@@ -9,12 +9,23 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-    ports:
-      - 9000:9000
     security_opt:
       - no-new-privileges:true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.ferg.ferguson.pw`)"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.routers.portainer.entryPoints=https"
+      - "traefik.http.services.portainer.loadbalancer.server.scheme=http"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.routers.portainer.middlewares=ferg-ipwhitelist@docker"
 
 volumes:
   portainer_data:
     external: true
     name: portainer_portainer_data
+
+networks:
+  default:
+    external:
+      name: traefik
