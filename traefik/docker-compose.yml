@@ -54,8 +54,8 @@ services:
       - "traefik.http.routers.http-catchAll.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
 
-      - "traefik.http.middlewares.ferg-ipwhitelist.ipwhitelist.sourcerange=10.10.0.0/24,192.168.124.0/24"
-
+      - "traefik.http.middlewares.ferg-ipwhitelist.ipwhitelist.sourcerange=10.10.0.0/24,10.20.0.0/24,10.100.0.0/24"
+      - "traefik.http.middlewares.fergsecure-ipwhitelist.ipwhitelist.sourcerange=10.100.0.0/24"
 
       ####
       - "traefik.enable=true"
