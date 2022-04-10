@@ -1,0 +1,40 @@
+version: "3.3" 
+services:
+  unifi-controller:
+    image: linuxserver/unifi-controller
+    container_name: unifi-controller 
+    volumes:
+      - "./config:/config"
+#      - "~/docker/unifi-controller/data:/usr/lib/unifi/data/"
+    environment:
+      - PUID=1000
+      - PGID=1000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.unifi.rule=Host(`unifi.ferg.ferguson.pw`)"
+      - "traefik.http.routers.unifi.tls=true"
+      - "traefik.http.routers.unifi.entryPoints=https"
+      - "traefik.http.services.unifi.loadbalancer.server.scheme=https"
+      - "traefik.http.services.unifi.loadbalancer.server.port=8443"
+      - "serversTransport.insecureSkipVerify=true"
+      - "traefik.http.routers.unifi.middlewares=ferg-ipwhitelist@docker"
+
+#    expose: [8443]
+    ports:
+      - 3478:3478/udp
+#      - 10001:10001/udp
+      - 8080:8080
+#      - 8081:8081
+#      - 8443:8443
+#      - 8843:8843
+#      - 8880:8880
+#      - 6789:6789
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: traefik
+
+
+
