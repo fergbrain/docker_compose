@@ -3,3 +3,6 @@ overseerr/data_overseerr/
 overseerr/data_radarr/
 overseerr/data_sonarr/
 overseerr/data/
+
+traefik/.env
+traefik/config/acme/
