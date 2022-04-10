@@ -10,9 +10,22 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       -  ./data/overseerr:/config
-    ports:
-      - 5055:5055
+#    ports:
+#      - 5055:5055
     restart: unless-stopped
+    networks:
+      - overseerr
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.overseerr.rule=Host(`overseerr.ferg.ferguson.pw`)"
+      - "traefik.http.routers.overseerr.tls=true"
+      - "traefik.http.routers.overseerr.entryPoints=https"
+      - "traefik.http.services.overseerr.loadbalancer.server.scheme=http"
+      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
+      - "traefik.http.routers.overseerr.middlewares=ferg-ipwhitelist@docker"
+
+
 
   # https://github.com/haugene/docker-transmission-openvpn
   transmission:
@@ -21,8 +34,8 @@ services:
     restart: always
     cap_add:
       - NET_ADMIN
-    ports:
-      - "9091:9091"
+#    ports:
+#      - "9091:9091"
     environment:
       - PGID=1000
       - PUID=1000
@@ -38,19 +51,31 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
+    networks:
+      - overseerr
+      - default
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ./data/transmission:/var/transmission-home
       - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.ferg.ferguson.pw`)"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.entryPoints=https"
+      - "traefik.http.services.transmission.loadbalancer.server.scheme=http"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+      - "traefik.http.routers.transmission.middlewares=ferg-ipwhitelist@docker"
+
   
   # https://github.com/linuxserver/docker-radarr
   radarr:
     image: linuxserver/radarr:latest
     container_name: radarr
     restart: always
-    ports:
-      - "7878:7878"
+ #   ports:
+ #     - "7878:7878"
     environment:
       - PGID=1000
       - PUID=1000
@@ -59,14 +84,26 @@ services:
       - ./data/radarr:/config
       - /mnt/media/movies:/movies
       - /mnt/media/downloads/completed:/downloads
+    networks:
+      - overseerr
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.ferg.ferguson.pw`)"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.routers.radarr.entryPoints=https"
+      - "traefik.http.services.radarr.loadbalancer.server.scheme=http"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.routers.radarr.middlewares=ferg-ipwhitelist@docker"
+
 
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
     restart: always
-    ports:
-      - "8989:8989"
+#    ports:
+#      - "8989:8989"
     environment:
       - PGID=1000
       - PUID=1000
@@ -75,14 +112,26 @@ services:
       - ./data/sonarr:/config
       - /mnt/media/tv:/tv
       - /mnt/media/downloads/completed:/downloads
+    networks:
+      - overseerr
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.ferg.ferguson.pw`)"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.routers.sonarr.entryPoints=https"
+      - "traefik.http.services.sonarr.loadbalancer.server.scheme=http"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.sonarr.middlewares=ferg-ipwhitelist@docker"
+
 
   # https://github.com/linuxserver/docker-jackett
   jackett:
     image: linuxserver/jackett:latest
     container_name: jackett
     restart: always
-    ports:
-      - "9117:9117"
+#    ports:
+#      - "9117:9117"
     environment:
       - PGID=1000
       - PUID=1000
@@ -90,3 +139,22 @@ services:
     volumes:
       - ./data/jackett:/config
       - /mnt/media/downloads/watch:/downloads  # transmission watch directory
+    networks:
+      - overseerr
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.ferg.ferguson.pw`)"
+      - "traefik.http.routers.jackett.tls=true"
+      - "traefik.http.routers.jackett.entryPoints=https"
+      - "traefik.http.services.jackett.loadbalancer.server.scheme=http"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
+      - "traefik.http.routers.jackett.middlewares=ferg-ipwhitelist@docker"
+
+
+networks:
+  default:
+    external:
+      name: traefik
+  overseerr:
+    external: false
