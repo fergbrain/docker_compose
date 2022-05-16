@@ -3,7 +3,7 @@ version: '3.3'
 services:
   traefik:
     # The official v2.0 Traefik docker image
-    image: traefik:v2.6.1
+    image: traefik:v2.6
     container_name: traefik
     environment:
       - LUADNS_API_USERNAME=${LUADNS_API_USERNAME}
@@ -69,7 +69,7 @@ services:
       - "traefik.http.routers.traefik.tls.domains[0].sans=*.ferg.ferguson.pw"      
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=andrewferguson:$$apr1$$8W4yNxee$$CdaYJ5W2ZPn3sOv1xtcUY."
+      - "traefik.http.middlewares.auth.basicauth.usersfile=./config/usersfile"
     
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS

@@ -6,3 +6,4 @@ overseerr/data/
 
 traefik/.env
 traefik/config/acme/
+traefik/config/usersfile
