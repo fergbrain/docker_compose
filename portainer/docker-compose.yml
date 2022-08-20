@@ -19,6 +19,7 @@ services:
       - "traefik.http.services.portainer.loadbalancer.server.scheme=http"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.http.routers.portainer.middlewares=ferg-ipwhitelist@docker"
+      - "com.centurylinklabs.watchtower.enable=true"
 
 volumes:
   portainer_data:
