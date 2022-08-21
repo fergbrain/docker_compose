@@ -47,6 +47,7 @@ services:
       - OPENVPN_PASSWORD=**None**
       - WEBPROXY_ENABLED=false
       - TRANSMISSION_HOME=/var/transmission-home/
+      - TRANSMISSION_WEB_UI=combustion
       - LOCAL_NETWORK=10.0.0.0/8
     dns:
       - 8.8.8.8
@@ -56,6 +57,7 @@ services:
       - default
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
+      - ./config/transmission/scripts/:/scripts/
       - ./data/transmission:/var/transmission-home
       - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
