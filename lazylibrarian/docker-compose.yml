@@ -1,0 +1,36 @@
+version: "2.1"
+services:
+  lazylibrarian:
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    container_name: lazylibrarian
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+    volumes:
+      - ./config/:/config
+      - /mnt/media/downloads/completed:/downloads
+      - /mnt/media/books:/books
+    ports:
+      - 5299:5299
+    restart: unless-stopped
+    networks:
+      - overseerr
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lazylibrarian.rule=Host(`lazylibrarian.ferg.ferguson.pw`)"
+      - "traefik.http.routers.lazylibrarian.tls=true"
+      - "traefik.http.routers.lazylibrarian.entryPoints=https"
+      - "traefik.http.services.lazylibrarian.loadbalancer.server.scheme=http"
+      - "traefik.http.services.lazylibrarian.loadbalancer.server.port=5299"
+      - "traefik.http.routers.lazylibrarian.middlewares=ferg-ipwhitelist@docker"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  default:
+    external:
+      name: traefik
+  overseerr:
+    external: false
