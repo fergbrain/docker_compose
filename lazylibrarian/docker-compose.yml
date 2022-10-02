@@ -10,13 +10,12 @@ services:
       - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
     volumes:
       - ./config/:/config
-      - /mnt/media/downloads/completed:/downloads
+      - /mnt/media/downloads/completed/books:/downloads
       - /mnt/media/books:/books
     ports:
       - 5299:5299
     restart: unless-stopped
     networks:
-      - overseerr
       - default
     labels:
       - "traefik.enable=true"
@@ -32,5 +31,3 @@ networks:
   default:
     external:
       name: traefik
-  overseerr:
-    external: false
