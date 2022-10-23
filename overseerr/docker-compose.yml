@@ -45,9 +45,10 @@ services:
       - OPENVPN_CONFIG=ca_vancouver,japan,ca_toronto,ca_ontario,mexico
       - OPENVPN_USERNAME=**None**
       - OPENVPN_PASSWORD=**None**
+      - OPENVPN_OPTS=--script-security 2 --up /scripts/openvpn-post-config.sh
       - WEBPROXY_ENABLED=false
       - TRANSMISSION_HOME=/var/transmission-home/
-      - TRANSMISSION_WEB_UI=combustion
+      - TRANSMISSION_WEB_UI=flood-for-transmission
       - LOCAL_NETWORK=10.0.0.0/8
     dns:
       - 8.8.8.8
@@ -57,7 +58,7 @@ services:
       - default
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
-      - ./config/transmission/scripts/:/scripts/
+      - ./config/transmission/scripts:/scripts
       - ./data/transmission:/var/transmission-home
       - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
