@@ -47,7 +47,7 @@ services:
       - OPENVPN_PASSWORD=**None**
       - OPENVPN_OPTS=--script-security 2 --up /scripts/openvpn-post-config.sh
       - WEBPROXY_ENABLED=false
-      - TRANSMISSION_HOME=/var/transmission-home/
+#      - TRANSMISSION_HOME=/var/transmission-home/
       - TRANSMISSION_WEB_UI=flood-for-transmission
       - LOCAL_NETWORK=10.0.0.0/8
     dns:
@@ -59,7 +59,8 @@ services:
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ./config/transmission/scripts:/scripts
-      - ./data/transmission:/var/transmission-home
+#      - ./data/transmission:/var/transmission-home
+      - ./data/transmission:/config/transmission-home
       - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
     labels:
