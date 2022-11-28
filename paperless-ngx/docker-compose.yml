@@ -66,7 +66,7 @@ services:
       PAPERLESS_URL: https://paperless.ferg.ferguson.pw
       PAPERLESS_TIME_ZONE: America/Los_Angeles
       PAPERLESS_CONSUMER_POLLING: 60
-      PAPERLESS_OCR_LANGUAGE=eng
+      PAPERLESS_OCR_LANGUAGE: eng
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.rule=Host(`paperless.ferg.ferguson.pw`)"
