@@ -40,6 +40,7 @@ services:
 
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    user: 1000
     restart: unless-stopped
     depends_on:
       - broker
@@ -53,16 +54,29 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - data:/usr/src/paperless/data
-      - media:/usr/src/paperless/media
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
+      - data:/mnt/family/documents/paperless/data
+      - media:/mnt/family/documents/paperless/media
+      - ./export:/mnt/family/documents/paperless/export
+      - ./consume:/mnt/family/documents/paperless/consume
     env_file: docker-compose.env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_URL: https://paperless.ferg.ferguson.pw
+      PAPERLESS_TIME_ZONE: America/Los_Angeles
+      PAPERLESS_CONSUMER_POLLING: 60
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.ferg.ferguson.pw`)"
+      - "traefik.http.routers.paperless.tls=true"
+      - "traefik.http.routers.paperless.entryPoints=https"
+      - "traefik.http.services.paperless.loadbalancer.server.scheme=http"
+      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
+      - "traefik.http.routers.paperless.middlewares=ferg-ipwhitelist@docker"
+      - "com.centurylinklabs.watchtower.enable=true"
+
 
   gotenberg:
     image: docker.io/gotenberg/gotenberg:7.6
@@ -79,3 +93,8 @@ volumes:
   data:
   media:
   redisdata:
+
+networks:
+  default:
+    external:
+      name: traefik
