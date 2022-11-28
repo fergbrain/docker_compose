@@ -40,7 +40,6 @@ services:
 
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
-    user: 1000
     restart: unless-stopped
     depends_on:
       - broker
