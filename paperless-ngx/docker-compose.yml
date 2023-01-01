@@ -40,6 +40,7 @@ services:
 
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    user: "1000:1000"
     restart: unless-stopped
     depends_on:
       - broker
@@ -59,6 +60,8 @@ services:
       - /mnt/family/documents/paperless/consume:/usr/src/paperless/consume
     env_file: docker-compose.env
     environment:
+      PGID: 1000
+      PUID: 1000
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
