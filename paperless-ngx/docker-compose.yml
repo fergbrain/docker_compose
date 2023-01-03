@@ -70,6 +70,10 @@ services:
       PAPERLESS_TIME_ZONE: America/Los_Angeles
       PAPERLESS_CONSUMER_POLLING: 60
       PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_TASK_WORKERS: 2
+      PAPERLESS_THREADS_PER_WORKER: 2
+      PAPERLESS_WORKER_TIMEOUT: 3600
+      PAPERLESS_DATE_ORDER: MDY
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.rule=Host(`paperless.ferg.ferguson.pw`)"
