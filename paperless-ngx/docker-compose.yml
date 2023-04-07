@@ -76,7 +76,7 @@ services:
       PAPERLESS_DATE_ORDER: MDY
       PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: 1
       PAPERLESS_CONSUMER_RECURSIVE: 1
-      PAPERLESS_CONSUMER_IGNORE_PATTERNS: '[".DS_STORE/*", "._*", ".stfolder/*", ".stversions/*", ".localized/*", "desktop.ini", ".recycle/*"]'
+      PAPERLESS_CONSUMER_IGNORE_PATTERNS: '[".DS_STORE/*", "._*", ".stfolder/*", ".stversions/*", ".localized/*", "desktop.ini", ".recycle/*","*/.recycle/*"]'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.rule=Host(`paperless.ferg.ferguson.pw`)"
