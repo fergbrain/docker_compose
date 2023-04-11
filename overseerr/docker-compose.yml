@@ -18,12 +18,21 @@ services:
       - default
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.overseerr.rule=Host(`overseerr.ferg.ferguson.pw`)"
-      - "traefik.http.routers.overseerr.tls=true"
-      - "traefik.http.routers.overseerr.entryPoints=https"
-      - "traefik.http.services.overseerr.loadbalancer.server.scheme=http"
-      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
-      - "traefik.http.routers.overseerr.middlewares=ferg-ipwhitelist@docker"
+
+#      - "traefik.http.routers.overseerr.rule=Host(`overseerr.ferg.ferguson.pw`)"
+#      - "traefik.http.routers.overseerr.tls=true"
+#      - "traefik.http.routers.overseerr.entryPoints=https"
+#      - "traefik.http.services.overseerr.loadbalancer.server.scheme=http"
+#      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
+#      - "traefik.http.routers.overseerr.middlewares=ferg-ipwhitelist@docker"
+
+      - "traefik.http.routers.overseerr-public.rule=Host(`lab.ferguson.pw`) || Host(`overseerr.ferg.ferguson.pw`)"
+      - "traefik.http.routers.overseerr-public.entryPoints=https"
+      - "traefik.http.routers.overseerr-public.tls=true"
+      - "traefik.http.routers.overseerr-public.tls.certresolver=letsencrypt-http"
+      - "traefik.http.services.overseerr-public.loadbalancer.server.scheme=http"
+      - "traefik.http.services.overseerr-public.loadbalancer.server.port=5055"
+
       - "com.centurylinklabs.watchtower.enable=true"
 
 
@@ -43,12 +52,13 @@ services:
       - CREATE_TUN_DEVICE=true
       - OPENVPN_PROVIDER=PIA
       - OPENVPN_CONFIG=ca_vancouver,japan,ca_toronto,ca_ontario,mexico
+#      - OPENVPN_CONFIG=us_west
       - OPENVPN_USERNAME=**None**
       - OPENVPN_PASSWORD=**None**
       - OPENVPN_OPTS=--script-security 2 --up /scripts/openvpn-post-config.sh
       - WEBPROXY_ENABLED=false
 #      - TRANSMISSION_HOME=/var/transmission-home/
-      - TRANSMISSION_WEB_UI=flood-for-transmission
+      - TRANSMISSION_WEB_UI=kettu
       - LOCAL_NETWORK=10.0.0.0/8
     dns:
       - 8.8.8.8
