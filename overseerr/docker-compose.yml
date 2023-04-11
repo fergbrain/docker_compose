@@ -10,6 +10,7 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       -  ./data/overseerr:/config
+# Not needed because we're using traefik
 #    ports:
 #      - 5055:5055
     restart: unless-stopped
@@ -52,14 +53,11 @@ services:
       - CREATE_TUN_DEVICE=true
       - OPENVPN_PROVIDER=PIA
       - OPENVPN_CONFIG=ca_vancouver,japan,ca_toronto,ca_ontario,mexico
-#      - OPENVPN_CONFIG=us_west
       - OPENVPN_USERNAME=**None**
       - OPENVPN_PASSWORD=**None**
-      - OPENVPN_OPTS=--script-security 2 --up /scripts/openvpn-post-config.sh
+      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
       - WEBPROXY_ENABLED=false
-#      - TRANSMISSION_HOME=/var/transmission-home/
-      - TRANSMISSION_WEB_UI=kettu
-      - LOCAL_NETWORK=10.0.0.0/8
+      - TRANSMISSION_WEB_UI=combustion
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -69,7 +67,6 @@ services:
     volumes:
       - ./config/transmission/openvpn-credentials.txt:/config/openvpn-credentials.txt
       - ./config/transmission/scripts:/scripts
-#      - ./data/transmission:/var/transmission-home
       - ./data/transmission:/config/transmission-home
       - /mnt/media/downloads:/data
       - /etc/localtime:/etc/localtime:ro
