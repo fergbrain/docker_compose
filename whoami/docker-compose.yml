@@ -1,12 +1,21 @@
-whoami:
-    image: jwilder/whoami
+services:
+  whoami:
+    image: "traefik/whoami"
+    labels:
+      - "traefik.enable=true"
+#      - "traefik.http.routers.whoami.rule=Host(`test.ferg.ferguson.pw`)"
+#      - "traefik.http.routers.whoami.rule=Host(`lab.ferguson.pw`) && Path(`/overseerr`)"
+      - "traefik.http.routers.whoami.rule=Host(`test.ferg.ferguson.pw`) || Host(`lab.ferguson.pw`) && Path(`/overseerr`)"
+      - "traefik.http.routers.whoami.entrypoints=https"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt-http"
+      - "traefik.http.services.whoami.loadbalancer.server.scheme=http"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
+#      - "traefik.http.routers.whoami.middlewares=ferg-ipwhitelist@docker"
     networks:
-      - caddy
-    deploy:
-      labels:
-        caddy: whoami.ferg.ferguson.pw
-        caddy.reverse_proxy: "{{upstreams 8000}}"
-        # remove the following line when you have verified your setup
-        # Otherwise you risk being rate limited by let's encrypt
-		#caddy.tls.dns: 
-        #caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
+      - traefik
+
+networks:
+  traefik:
+    external: true
+
