@@ -95,6 +95,7 @@ services:
       - "gotenberg"
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
+      - "--api-timeout=400s"
 
   tika:
     image: ghcr.io/paperless-ngx/tika:latest
