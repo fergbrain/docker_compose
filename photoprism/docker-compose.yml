@@ -41,8 +41,8 @@ services:
     ## Use photoprism/photoprism:preview for testing preview builds:
     image: photoprism/photoprism:latest
     container_name: photoprism
-    # depends_on:
-    #   - mariadb
+    depends_on:
+      - mariadb
     ## Don't enable automatic restarts until PhotoPrism has been properly configured and tested!
     ## If the service gets stuck in a restart loop, this points to a memory, filesystem, network, or database issue:
     ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
@@ -52,10 +52,10 @@ services:
 #      - apparmor:unconfined
     ports:
       - "2342:2342" # HTTP port (host:container)
+    env_file: photoprism.env
     environment:
-      PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # !!! PLEASE CHANGE YOUR INITIAL "admin" PASSWORD !!!
       PHOTOPRISM_SITE_URL: "https://photoprism.ferg.ferguson.pw"  # public server URL incl http:// or https:// and /path, :port is optional
-      PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
+      PHOTOPRISM_ORIGINALS_LIMIT: 50000               # file size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # improves transfer speed and bandwidth utilization (none or gzip)
       PHOTOPRISM_DEBUG: "false"                      # run in debug mode (shows additional log messages)
       PHOTOPRISM_PUBLIC: "false"                     # no authentication required (disables password protection)
@@ -70,12 +70,9 @@ services:
       PHOTOPRISM_DARKTABLE_PRESETS: "false"          # enables Darktable presets and disables concurrent RAW conversion
       PHOTOPRISM_DETECT_NSFW: "false"                # flag photos as private that MAY be offensive (requires TensorFlow)
       PHOTOPRISM_UPLOAD_NSFW: "true"                 # allows uploads that MAY be offensive
-      PHOTOPRISM_DATABASE_DRIVER: "sqlite"         # SQLite is an embedded database that doesn't require a server
-      # PHOTOPRISM_DATABASE_DRIVER: "mysql"            # use MariaDB 10.5+ or MySQL 8+ instead of SQLite for improved performance
-      # PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB or MySQL database server (hostname:port)
-      # PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB or MySQL database schema name
-      # PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB or MySQL database user name
-      # PHOTOPRISM_DATABASE_PASSWORD: "insecure"       # MariaDB or MySQL database user password
+      #PHOTOPRISM_DATABASE_DRIVER: "sqlite"         # SQLite is an embedded database that doesn't require a server
+      PHOTOPRISM_DATABASE_DRIVER: "mysql"            # use MariaDB 10.5+ or MySQL 8+ instead of SQLite for improved performance
+      PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB or MySQL database server (hostname:port)
       PHOTOPRISM_SITE_TITLE: "PhotoPrism"
       PHOTOPRISM_SITE_CAPTION: "Ferguson Family Photos"
       PHOTOPRISM_SITE_DESCRIPTION: "Central place to store photos"
@@ -117,40 +114,27 @@ services:
       - "traefik.http.services.photoprism.loadbalancer.server.scheme=http"
       - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
       - "traefik.http.routers.photoprism.middlewares=ferg-ipwhitelist@docker"
+      - "com.centurylinklabs.watchtower.enable=true"
 
 
   ## Database Server (recommended)
   ## see https://docs.photoprism.app/getting-started/faq/#should-i-use-sqlite-mariadb-or-mysql
-  # mariadb:
+  mariadb:
     ## If MariaDB gets stuck in a restart loop, this points to a memory or filesystem issue:
     ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
-    # restart: unless-stopped
-    # image: mariadb:10.6
-    # security_opt:
-    #   - seccomp:unconfined
-    #   - apparmor:unconfined
-    # command: mysqld --innodb-buffer-pool-size=128M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
+    restart: unless-stopped
+    image: mariadb:10.11
+    security_opt: # see https://github.com/MariaDB/mariadb-docker/issues/434#issuecomment-1136151239
+      - seccomp:unconfined
+      - apparmor:unconfined
+    command: mysqld --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
     ## Never store database files on an unreliable device such as a USB flash drive, an SD card, or a shared network folder:
-    # volumes:
-    #   - "./database:/var/lib/mysql" # important, don't remove
-    # environment:
-    #   MYSQL_ROOT_PASSWORD: insecure
-    #   MYSQL_DATABASE: photoprism
-    #   MYSQL_USER: photoprism
-    #   MYSQL_PASSWORD: insecure
-
-  ## Watchtower upgrades services automatically (optional)
-  ## see https://docs.photoprism.app/getting-started/updates/#watchtower
-  #
-  # watchtower:
-  #   restart: unless-stopped
-  #   image: containrrr/watchtower
-  #   environment:
-  #     WATCHTOWER_CLEANUP: "true"
-  #     WATCHTOWER_POLL_INTERVAL: 7200 # checks for updates every two hours
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock"
-  #     - "~/.docker/config.json:/config.json" # optional, for authentication if you have a Docker Hub account
+    volumes:
+      - "./database:/var/lib/mysql" # important, don't remove
+    env_file: mariadb.env
+    environment:
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_INITDB_SKIP_TZINFO: "1"
 
 networks:
   default:
