@@ -58,6 +58,8 @@ services:
       - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
       - WEBPROXY_ENABLED=false
       - TRANSMISSION_WEB_UI=combustion
+      - TRANSMISSION_SCRIPT_TORRENT_DONE_ENABLED=true
+      - TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME=/scripts/extract_torrent.sh
     dns:
       - 8.8.8.8
       - 8.8.4.4
