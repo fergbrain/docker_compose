@@ -18,6 +18,7 @@ services:
       - "traefik.http.services.unifi.loadbalancer.server.port=8443"
       - "serversTransport.insecureSkipVerify=true"
       - "traefik.http.routers.unifi.middlewares=ferg-ipwhitelist@docker"
+      - "com.centurylinklabs.watchtower.enable=true"
 
 #    expose: [8443]
     ports:
