@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  linkding:
+    container_name: "${LD_CONTAINER_NAME:-linkding}"
+    image: sissbruecker/linkding:latest
+    ports:
+      - "${LD_HOST_PORT:-9090}:9090"
+    volumes:
+      - "${LD_HOST_DATA_DIR:-./data}:/etc/linkding/data"
+    env_file:
+      - .env
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.linkding.rule=Host(`linkding.fergcorp.com`)"
+      - "traefik.http.routers.linkding.entrypoints=https"
+      - "traefik.http.routers.linkding.tls=true"
+      - "traefik.http.routers.linkding.tls.certresolver=letsencrypt-http"
+      - "traefik.http.services.linkding.loadbalancer.server.scheme=http"
+      - "traefik.http.services.linkding.loadbalancer.server.port=9090"
+#      - "traefik.http.routers.whoami.middlewares=ferg-ipwhitelist@docker"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
