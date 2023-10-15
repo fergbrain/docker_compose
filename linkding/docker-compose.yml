@@ -10,6 +10,8 @@ services:
       - "${LD_HOST_DATA_DIR:-./data}:/etc/linkding/data"
     env_file:
       - .env
+    environment:
+      - LD_FAVICON_PROVIDER=https://icons.duckduckgo.com/ip3/{domain}.ico
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
