@@ -2,7 +2,7 @@ version: '3.5'
 
 include:
   - photoprism-pam.yml
-
+  - photoprism-rachel.yml
 # Example Docker Compose config file for PhotoPrism (Linux / AMD64)
 #
 # Note:
@@ -79,7 +79,7 @@ services:
       PHOTOPRISM_SITE_TITLE: "PhotoPrism"
       PHOTOPRISM_SITE_CAPTION: "Ferguson Family Photos"
       PHOTOPRISM_SITE_DESCRIPTION: "Central place to store photos"
-      PHOTOPRISM_SITE_AUTHOR: "The Fergusons"
+      PHOTOPRISM_SITE_AUTHOR: "Andrew Ferguson"
       ## Run/install on first startup (options: update, gpu, tensorflow, davfs, nano, clean):
       # PHOTOPRISM_INIT: "gpu tensorflow"
       ## Hardware video transcoding config (optional)
@@ -104,7 +104,9 @@ services:
     ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
     volumes:
       # "/host/folder:/photoprism/folder"                # example
-      - "/mnt/family/pictures:/photoprism/originals"               # original media files (photos and videos)
+      - "/mnt/family/pictures/andrewferguson:/photoprism/originals/andrewferguson"               # original media files (photos and videos)
+      # - "/mnt/family/pictures/rachelferguson:/photoprism/originals/rachelferguson"               # original media files (photos and videos)
+      - "/mnt/family/pictures/other:/photoprism/originals/other"               # original media files (photos and videos)
       # - "/example/family:/photoprism/originals/family" # *additional* media folders can be mounted like this
       # - "~/Import:/photoprism/import"                  # *optional* base folder from which files can be imported to originals
       - "/mnt/family/photoprism/storage:/photoprism/storage"                  # *writable* storage folder for cache, database, and sidecar files (never remove)
@@ -141,5 +143,5 @@ services:
 
 networks:
   default:
-    external:
-      name: traefik
+   name: traefik
+   external: true

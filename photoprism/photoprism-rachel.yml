@@ -1,10 +1,10 @@
 version: '3.5'
 
 services:
-  photoprism-pam:
+  photoprism-rachel:
     ## Use photoprism/photoprism:preview for testing preview builds:
     image: photoprism/photoprism:latest
-    container_name: photoprism-pam
+    container_name: photoprism-rachel
     depends_on:
       - mariadb
     ## Don't enable automatic restarts until PhotoPrism has been properly configured and tested!
@@ -18,7 +18,7 @@ services:
 #      - "2342:2342" # HTTP port (host:container)
     env_file: photoprism.env
     environment:
-      PHOTOPRISM_SITE_URL: "https://pamphotos.ferg.ferguson.pw"  # public server URL incl http:// or https:// and /path, :port is optional
+      PHOTOPRISM_SITE_URL: "https://rachelphotos.ferg.ferguson.pw"  # public server URL incl http:// or https:// and /path, :port is optional
       PHOTOPRISM_ORIGINALS_LIMIT: 50000               # file size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # improves transfer speed and bandwidth utilization (none or gzip)
       PHOTOPRISM_DEBUG: "false"                      # run in debug mode (shows additional log messages)
@@ -36,12 +36,12 @@ services:
       PHOTOPRISM_UPLOAD_NSFW: "true"                 # allows uploads that MAY be offensive
       PHOTOPRISM_DATABASE_DRIVER: "mysql"            # use MariaDB 10.5+ or MySQL 8+ instead of SQLite for improved performance
       PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB or MySQL database server (hostname:port)
-      PHOTOPRISM_DATABASE_USER: "photoprismpam"
-      PHOTOPRISM_DATABASE_NAME: "photoprismpam"
+      PHOTOPRISM_DATABASE_USER: "photoprism"
+      PHOTOPRISM_DATABASE_NAME: "photoprismrachel"
       PHOTOPRISM_SITE_TITLE: "PhotoPrism"
-      PHOTOPRISM_SITE_CAPTION: "Ferguson Family Photos"
+      PHOTOPRISM_SITE_CAPTION: "Rachel's Photos"
       PHOTOPRISM_SITE_DESCRIPTION: "Central place to store photos"
-      PHOTOPRISM_SITE_AUTHOR: "The Fergusons"
+      PHOTOPRISM_SITE_AUTHOR: "Rachel Ferguson"
       PHOTOPRISM_BACKUP_PATH: "/photoprism/storage/backup/"
       ## Run/install on first startup (options: update, gpu, tensorflow, davfs, nano, clean):
       # PHOTOPRISM_INIT: "gpu tensorflow"
@@ -67,17 +67,18 @@ services:
     ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
     volumes:
       # "/host/folder:/photoprism/folder"                # example
-      - "/mnt/family/pictures/pamferguson:/photoprism/originals"               # original media files (photos and videos)
+      - /mnt/family/pictures/rachelferguson:/photoprism/originals               # original media files (photos and videos)
+      # - /mnt/family/pictures/other:/photoprism/originals/other               # original media files (photos and videos)      
       # - "/example/family:/photoprism/originals/family" # *additional* media folders can be mounted like this
-      - "/mnt/family/pictures/import/pamferguson:/photoprism/import"                  # *optional* base folder from which files can be imported to originals
-      - "/mnt/family/photoprism/pamferguson/storage:/photoprism/storage"                  # *writable* storage folder for cache, database, and sidecar files (never remove)
+      - "/mnt/family/pictures/import/rachelferguson:/photoprism/import"                  # *optional* base folder from which files can be imported to originals
+      - "/mnt/family/photoprism/rachelferguson/storage:/photoprism/storage"                  # *writable* storage folder for cache, database, and sidecar files (never remove)
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.photoprism-pam.rule=Host(`pamphotos.ferg.ferguson.pw`)"
-      - "traefik.http.routers.photoprism-pam.tls=true"
-      - "traefik.http.routers.photoprism-pam.entryPoints=https"
-      - "traefik.http.services.photoprism-pam.loadbalancer.server.scheme=http"
-      - "traefik.http.services.photoprism-pam.loadbalancer.server.port=2342"
-      - "traefik.http.routers.photoprism-pam.middlewares=ferg-ipwhitelist@docker"
+      - "traefik.http.routers.photoprism-rachel.rule=Host(`rachelphotos.ferg.ferguson.pw`)"
+      - "traefik.http.routers.photoprism-rachel.tls=true"
+      - "traefik.http.routers.photoprism-rachel.entryPoints=https"
+      - "traefik.http.services.photoprism-rachel.loadbalancer.server.scheme=http"
+      - "traefik.http.services.photoprism-rachel.loadbalancer.server.port=2342"
+      - "traefik.http.routers.photoprism-rachel.middlewares=ferg-ipwhitelist@docker"
       - "com.centurylinklabs.watchtower.enable=true"
